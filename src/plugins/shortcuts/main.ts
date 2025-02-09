@@ -16,10 +16,24 @@ function _registerGlobalShortcut(
   shortcut: string,
   action: (webContents: Electron.WebContents) => void,
 ) {
+  const accelerators = ["CmdOrCtrl+Shift+Alt", "CmdOrCtrl+Shift", "CmdOrCtrl+Alt", "Shift+Alt", "CmdOrCtrl", "Shift", "Alt"];
+  const makeTrulyGlobal = ["goBack", "goForward", "like", "dislike"];
+
+  // Always register the shortcut on its own
   globalShortcut.register(shortcut, () => {
     action(webContents);
   });
+
+  // Register additional accelerators only if it's in makeTrulyGlobal
+  if (makeTrulyGlobal.includes(action.name)) {
+    accelerators.forEach(accelerator => {
+      globalShortcut.register(`${accelerator}+${shortcut}`, () => {
+        action(webContents);
+      });
+    });
+  }
 }
+
 
 function _registerLocalShortcut(
   win: BrowserWindow,
