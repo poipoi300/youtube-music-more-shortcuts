@@ -282,6 +282,7 @@
     "node-html-parser": "7.0.1",
     "node-id3": "0.2.6",
     "peerjs": "1.5.4",
+    "pnpm": "^10.2.1",
     "semver": "7.7.0",
     "serve": "14.2.4",
     "simple-youtube-age-restriction-bypass": "github:organization/Simple-YouTube-Age-Restriction-Bypass#v2.5.9",

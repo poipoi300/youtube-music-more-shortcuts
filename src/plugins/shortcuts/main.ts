@@ -9,8 +9,6 @@ import type { ShortcutMappingType, ShortcutsPluginConfig } from './index';
 
 import type { BackendContext } from '@/types/contexts';
 
-const seekSeconds = 10;
-
 function _registerGlobalShortcut(
   webContents: Electron.WebContents,
   shortcut: string,
@@ -67,17 +65,18 @@ export const onMainLoad = async ({
     registerMPRIS(window);
   }
 
-  const { global, local } = config;
+  const { global, local, rewindSeekSeconds } = config;
   const shortcutOptions = { global, local };
 
   for (const optionType in shortcutOptions) {
     registerAllShortcuts(
       shortcutOptions[optionType as 'global' | 'local'],
       optionType,
+      rewindSeekSeconds
     );
   }
 
-  function registerAllShortcuts(container: ShortcutMappingType, type: string) {
+  function registerAllShortcuts(container: ShortcutMappingType, type: string, rewindSeekSeconds: number) {
     for (const _action in container) {
       // HACK: _action is detected as string, but it's actually a key of ShortcutMappingType
       const action = _action as keyof ShortcutMappingType;
@@ -95,7 +94,7 @@ export const onMainLoad = async ({
 
       let actionCallback: () => void;
       if (action === 'goForward' || action === 'goBack') {
-        actionCallback = () => songControls[action](seekSeconds);
+        actionCallback = () => songControls[action](rewindSeekSeconds)
       }
       else {
         actionCallback = songControls[action];

@@ -13,6 +13,7 @@ export type ShortcutMappingType = {
 export type ShortcutsPluginConfig = {
   enabled: boolean;
   overrideMediaKeys: boolean;
+  rewindSeekSeconds: number;
   global: ShortcutMappingType;
   local: ShortcutMappingType;
 };
@@ -24,6 +25,7 @@ export default createPlugin({
   config: {
     enabled: false,
     overrideMediaKeys: false,
+    rewindSeekSeconds: 10,
     global: {
       previous: '',
       playPause: '',
