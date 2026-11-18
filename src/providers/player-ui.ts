@@ -78,8 +78,9 @@ export const getLikeStatus = (root: ParentNode = document): LikeType => {
   return LikeType.Indifferent;
 };
 
-// On the new UI this clicks the button, so liking an already liked song
-// clears the like.
+// Sets an absolute status like the legacy updateLikeStatus. The new UI's
+// buttons toggle, so click only when the status changes, and clear a rating
+// by clicking the button that holds it.
 export const updateLike = (
   root: ParentNode,
   status: LikeType | `${LikeType}`,
@@ -90,7 +91,11 @@ export const updateLike = (
     return;
   }
 
-  const button = status === LikeType.Dislike ? 'dislike' : 'like';
+  const current = getLikeStatus(root);
+  if (current === status) return;
+
+  const target = status === LikeType.Indifferent ? current : status;
+  const button = target === LikeType.Dislike ? 'dislike' : 'like';
   root
     .querySelector<HTMLElement>(
       `ytmusic-miniplayer ${button}-button-view-model button`,

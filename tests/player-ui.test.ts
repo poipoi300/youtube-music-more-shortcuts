@@ -175,6 +175,32 @@ test.describe('player-ui: new YTM player UI', () => {
     expect(calls).toEqual(['click.like', 'click.dislike']);
   });
 
+  // The buttons toggle, but updateLike sets an absolute status like the
+  // legacy updateLikeStatus: repeating it must not clear the rating.
+  test('updateLike leaves an already set rating alone', () => {
+    const liked = createNewUi({ pressed: 'like' });
+    updateLike(liked.document, 'LIKE');
+    expect(liked.calls).toEqual([]);
+
+    const disliked = createNewUi({ pressed: 'dislike' });
+    updateLike(disliked.document, 'DISLIKE');
+    expect(disliked.calls).toEqual([]);
+
+    const unrated = createNewUi();
+    updateLike(unrated.document, 'INDIFFERENT');
+    expect(unrated.calls).toEqual([]);
+  });
+
+  test('updateLike to indifferent clears the current rating', () => {
+    const liked = createNewUi({ pressed: 'like' });
+    updateLike(liked.document, 'INDIFFERENT');
+    expect(liked.calls).toEqual(['click.like']);
+
+    const disliked = createNewUi({ pressed: 'dislike' });
+    updateLike(disliked.document, 'INDIFFERENT');
+    expect(disliked.calls).toEqual(['click.dislike']);
+  });
+
   test('next / previous use the player api', () => {
     const { document, calls } = createNewUi();
     nextTrack(document);
